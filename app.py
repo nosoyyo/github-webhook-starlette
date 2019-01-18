@@ -22,8 +22,8 @@ class WebHook(HTTPEndpoint):
         return JSONResponse(resp)
 
     async def post(self, request):
+        event = request.headers['X-GitHub-Event']
         form = await request.form()
-        event = form['payload']['hook']['events'][0]
         return JSONResponse({'event': event})
 
 
