@@ -10,7 +10,7 @@ from config import Conf
 app = Starlette(debug=True)
 
 
-@app.route("github_webhook")
+@app.route("/github_webhook")
 class WebHook(HTTPEndpoint):
     '''
 
