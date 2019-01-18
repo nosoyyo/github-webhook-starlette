@@ -19,25 +19,32 @@ class WebHook(HTTPEndpoint):
 
     '''
 
-    _sh = Conf._sh
-
     async def get(self, request):
         resp = {'ok': True}
         return JSONResponse(resp)
 
     async def post(self, request):
         event = request.headers['X-GitHub-Event']
+        form = await request.form()
+        repo_id = form['payload']['repository']['id']
+        _sh = Conf.projects[repo_id]['shell_script']
+        _dir = Conf.projects[repo_id]['dir']
         result = False
+
         if event == 'push':
-            # normally `_sh` return `0`, which could be considered as False
-            result = not os.system(f'bash {self._sh}')
-            if result:
-                message = f'successfully run {self._sh}'
-            else:
-                message = f'failed run {self._sh}'
+            try:
+                # normally `_sh` return `0`, which could be considered as False
+                os.chdir(_dir)
+                result = not os.system(f'bash {_sh}')
+                if result:
+                    message = f'successfully run {_sh}'
+                else:
+                    message = f'failed run {_sh}'
+            except Exception as e:
+                message = e
         else:
             message = f'only deal with push event, got {event}'
-        resp = {'result': result, 'message': message}
+        resp = {'done': result, 'message': message}
         return JSONResponse(resp)
 
 
