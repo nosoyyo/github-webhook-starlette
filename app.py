@@ -1,5 +1,6 @@
 # @falcon.ny
 import os
+import json
 import uvicorn
 from starlette.applications import Starlette
 from starlette.endpoints import HTTPEndpoint
@@ -24,9 +25,14 @@ class WebHook(HTTPEndpoint):
         return JSONResponse(resp)
 
     async def post(self, request):
+        '''
+
+        :var repo_id: <int> here we should pay attn. on this exception
+        '''
         event = request.headers['X-GitHub-Event']
         form = await request.form()
-        repo_id = form['payload']['repository']['id']
+        payload = json.loads(form['payload'])
+        repo_id = payload['repository']['id']
         _sh = Conf.projects[repo_id]['shell_script']
         _dir = Conf.projects[repo_id]['dir']
         result = False
