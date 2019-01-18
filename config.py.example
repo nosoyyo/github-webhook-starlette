@@ -1,0 +1,12 @@
+class Conf():
+
+    # TODO multi-user conf
+    projects = {}
+
+    # app will cd to dir above
+    # so the shell script should be there too, the dir above
+    projects[123456789]['dir'] = '~/github-webhook-starlette'
+    projects[123456789]['shell_script'] = './do.sh'
+    
+    projects[987654321]['dir'] = '/var/tmp/'
+    projects[987654321]['shell_script'] = './do.sh'
