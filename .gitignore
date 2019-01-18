@@ -1,3 +1,8 @@
+# User Config
+
+config.py
+do.sh
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
