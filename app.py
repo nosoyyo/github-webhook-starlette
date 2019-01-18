@@ -1,4 +1,5 @@
 # @falcon.ny
+import os
 import uvicorn
 from starlette.applications import Starlette
 from starlette.endpoints import HTTPEndpoint
@@ -14,8 +15,11 @@ app = Starlette(debug=True)
 class WebHook(HTTPEndpoint):
     '''
 
-    :var result: <list> of <dict> [{`track title` : `artist name`}]
+    On `push` event, do a shell script which should be set in config.py
+
     '''
+
+    _sh = Conf._sh
 
     async def get(self, request):
         resp = {'ok': True}
@@ -23,8 +27,18 @@ class WebHook(HTTPEndpoint):
 
     async def post(self, request):
         event = request.headers['X-GitHub-Event']
-        form = await request.form()
-        return JSONResponse({'event': event})
+        result = False
+        if event == 'push':
+            # normally `_sh` return `0`, which could be considered as False
+            result = not os.system(f'bash {self._sh}')
+            if result:
+                message = f'successfully run {self._sh}'
+            else:
+                message = f'failed run {self._sh}'
+        else:
+            message = f'only deal with push event, got {event}'
+        resp = {'result': result, 'message': message}
+        return JSONResponse(resp)
 
 
 if __name__ == '__main__':
