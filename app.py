@@ -23,7 +23,8 @@ class WebHook(HTTPEndpoint):
 
     async def post(self, request):
         form = await request.form()
-        return JSONResponse({'form': form})
+        event = form['payload']['hook']['events'][0]
+        return JSONResponse({'event': event})
 
 
 if __name__ == '__main__':
