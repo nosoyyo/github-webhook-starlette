@@ -66,9 +66,12 @@ class WebHook(HTTPEndpoint):
             except Exception as e:
                 message = e
         else:
-            message = f'only deal with `push` event, got `{event}`'
+            message = await self.getPingMessage(payload)
         resp = {'done': result, 'message': message}
         return JSONResponse(resp)
+
+    async def getPingMessage(self, payload):
+        return f"got ping from {payload['repository']['full_name']}"
 
 
 if __name__ == '__main__':
