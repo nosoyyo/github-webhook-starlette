@@ -66,7 +66,7 @@ class WebHook(HTTPEndpoint):
             except Exception as e:
                 message = e
         else:
-            message = f'only deal with push event, got {event}'
+            message = f'only deal with `push` event, got `{event}`'
         resp = {'done': result, 'message': message}
         return JSONResponse(resp)
 
