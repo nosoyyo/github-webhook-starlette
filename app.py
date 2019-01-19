@@ -35,7 +35,7 @@ class WebHook(HTTPEndpoint):
         r.delete(self.repo_id)
 
     async def get(self, request):
-        resp = {'ok': True}
+        resp = {'ok': True, 'message': 'you got this'}
         return JSONResponse(resp)
 
     async def post(self, request):
