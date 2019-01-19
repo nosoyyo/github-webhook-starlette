@@ -40,7 +40,6 @@ class WebHook(HTTPEndpoint):
 
     async def post(self, request):
         '''
-
         :var repo_id: <int> here we should pay attn. on this exception
         '''
         event = request.headers['X-GitHub-Event']
