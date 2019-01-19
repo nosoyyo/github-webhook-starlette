@@ -6,7 +6,7 @@ import uvicorn
 from starlette.applications import Starlette
 from starlette.endpoints import HTTPEndpoint
 from starlette.responses import JSONResponse
-from uvicorn.main import run
+from uvicorn.main import run, get_logger
 from uvicorn.reloaders.statreload import StatReload
 
 from config import Conf
@@ -18,11 +18,12 @@ cpool = redis.ConnectionPool(host='localhost',
                              decode_responses=True,
                              db=0)
 r = redis.Redis(connection_pool=cpool)
-reloader = StatReload()
+reloader = StatReload(get_logger('debug'))
 reloader.run(run, {
     'app': app,
     'host': '0.0.0.0',
     'port': 50001,
+    'log_level': 'debug',
     'debug': 'true'
 })
 
