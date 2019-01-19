@@ -1,7 +1,6 @@
 # @falcon.ny
 import os
 import json
-import redis
 import uvicorn
 from starlette.applications import Starlette
 from starlette.endpoints import HTTPEndpoint
@@ -13,11 +12,6 @@ from config import Conf
 
 
 app = Starlette(debug=True)
-cpool = redis.ConnectionPool(host='localhost',
-                             port=6379,
-                             decode_responses=True,
-                             db=0)
-r = redis.Redis(connection_pool=cpool)
 
 
 @app.route("/github_webhook")
@@ -28,14 +22,6 @@ class WebHook(HTTPEndpoint):
 
     '''
     repo_id = Conf.projects['gws']
-    pid = os.getpid()
-    print(f'repo_id: {repo_id}')
-    print(f'pid: {pid}')
-    r.set(repo_id, pid)
-    print(r.get(repo_id))
-
-    def __del__(self):
-        r.delete(self.repo_id)
 
     async def get(self, request):
         resp = {'ok': True, 'message': 'you got this'}
@@ -51,8 +37,6 @@ class WebHook(HTTPEndpoint):
         print(form)
         payload = json.loads(form['payload'])
         repo_id = payload['repository']['id']
-        pid = r.get(repo_id)
-        print(pid)
         _sh = Conf.projects[repo_id]['shell_script']
         _dir = Conf.projects[repo_id]['dir']
         result = False
@@ -62,7 +46,7 @@ class WebHook(HTTPEndpoint):
                 # normally `_sh` return `0`, which could be considered as False
                 os.chdir(_dir)
                 # always accept a `pid` param for killing the old one
-                result = not os.system(f'bash {_sh} {pid}')
+                result = not os.system(f'bash {_sh}')
                 if result:
                     message = f'successfully run {_sh}'
                 else:

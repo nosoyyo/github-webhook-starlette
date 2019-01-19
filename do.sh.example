@@ -1,12 +1,5 @@
 #!/bin/sh
-echo "GitHub WebHook Automatic Deployment running..."
-# it takes several seconds when close and reuse a socket, 
-# so we do killing first
-kill $1
+echo "gonna pull stuff from github..."
 
 # pull 
 git pull
-
-# with this sleep it's gonna be ok
-sleep 1
-python app.py
