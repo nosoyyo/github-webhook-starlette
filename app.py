@@ -26,13 +26,10 @@ class WebHook(HTTPEndpoint):
 
     '''
     repo_id = Conf.projects['gws']
+    pid = os.getpid()
     print(f'repo_id: {repo_id}')
-    if not r.get(repo_id):
-        pid = os.getpid()
-        r.set(repo_id, pid)
-    else:
-        pid = r.get(repo_id)
     print(f'pid: {pid}')
+    r.set(repo_id, pid)
     print(r.get(repo_id))
 
     def __del__(self):

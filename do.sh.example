@@ -4,5 +4,6 @@ git pull
 
 # kill the original pid
 kill $1
+sleep 1
 # and then restart
 python app.py
