@@ -30,6 +30,7 @@ class WebHook(HTTPEndpoint):
     print(f'repo_id: {repo_id}')
     print(f'pid: {pid}')
     r.set(repo_id, pid)
+    print(r.get(repo_id))
 
     def __del__(self):
         r.delete(self.repo_id)
@@ -48,6 +49,7 @@ class WebHook(HTTPEndpoint):
         payload = json.loads(form['payload'])
         repo_id = payload['repository']['id']
         pid = r.get(repo_id)
+        print(pid)
         _sh = Conf.projects[repo_id]['shell_script']
         _dir = Conf.projects[repo_id]['dir']
         result = False
@@ -70,7 +72,7 @@ class WebHook(HTTPEndpoint):
         return JSONResponse(resp)
 
     async def getPingMessage(self, payload):
-        return f"got ping from {payload['repository']['full_name']}"
+        return f"got `{event}` from {payload['repository']['full_name']}"
 
 
 if __name__ == '__main__':
