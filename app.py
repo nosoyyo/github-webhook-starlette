@@ -18,14 +18,6 @@ cpool = redis.ConnectionPool(host='localhost',
                              decode_responses=True,
                              db=0)
 r = redis.Redis(connection_pool=cpool)
-reloader = StatReload(get_logger('debug'))
-reloader.run(run, {
-    'app': app,
-    'host': '0.0.0.0',
-    'port': 50001,
-    'log_level': 'debug',
-    'debug': 'true'
-})
 
 
 @app.route("/github_webhook")
@@ -87,8 +79,15 @@ class WebHook(HTTPEndpoint):
 
 
 if __name__ == '__main__':
-    uvicorn.run(app,
+    reloader = StatReload(get_logger('debug'))
+    reloader.run(run, {
+        'app': app,
+        'host': '0.0.0.0',
+        'port': 50001,
+        'log_level': 'debug',
+        'debug': 'true'
+    })
+    uvicorn.run(app=app,
                 host='0.0.0.0',
                 port=50001,
-                log_level='debug',
-                debug='true',)
+                debug='true')
