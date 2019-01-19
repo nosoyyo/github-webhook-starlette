@@ -1,5 +1,5 @@
 #!/bin/sh
-echo "gonna pull stuff from github..."
+echo "gonna do some extra shell scripts..."
 
-# pull 
-git pull
+# normally no need to pull manually
+# git pull
