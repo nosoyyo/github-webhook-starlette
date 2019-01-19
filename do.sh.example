@@ -3,6 +3,6 @@ echo "GitHub WebHook Automatic Deployment running..."
 git pull
 
 # kill the original pid
-kill $0
+kill $1
 # and then restart
 python app.py

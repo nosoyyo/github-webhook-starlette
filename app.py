@@ -26,10 +26,13 @@ class WebHook(HTTPEndpoint):
 
     '''
     repo_id = Conf.projects['gws']
-    pid = os.getpid()
     print(f'repo_id: {repo_id}')
+    if not r.get(repo_id):
+        pid = os.getpid()
+        r.set(repo_id, pid)
+    else:
+        pid = r.get(repo_id)
     print(f'pid: {pid}')
-    r.set(repo_id, pid)
     print(r.get(repo_id))
 
     def __del__(self):
@@ -44,6 +47,7 @@ class WebHook(HTTPEndpoint):
         :var repo_id: <int> here we should pay attn. on this exception
         '''
         event = request.headers['X-GitHub-Event']
+        self.event = event
         form = await request.form()
         print(form)
         payload = json.loads(form['payload'])
@@ -72,7 +76,7 @@ class WebHook(HTTPEndpoint):
         return JSONResponse(resp)
 
     async def getPingMessage(self, payload):
-        return f"got `{event}` from {payload['repository']['full_name']}"
+        return f"got `{self.event}` from {payload['repository']['full_name']}"
 
 
 if __name__ == '__main__':
