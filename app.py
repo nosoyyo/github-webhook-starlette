@@ -25,11 +25,11 @@ class WebHook(HTTPEndpoint):
     On `push` event, do a shell script which should be set in config.py
 
     '''
-
-    def __init__(self):
-        self.repo_id = Conf.projects['gws']
-        self.pid = os.getpid()
-        r.set(self.repo_id, self.pid)
+    repo_id = Conf.projects['gws']
+    pid = os.getpid()
+    print(f'repo_id: {repo_id}')
+    print(f'pid: {pid}')
+    r.set(repo_id, pid)
 
     def __del__(self):
         r.delete(self.repo_id)
